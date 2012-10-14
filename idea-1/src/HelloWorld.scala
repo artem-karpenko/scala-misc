@@ -8,5 +8,8 @@ object HelloWorld {
       println(df format now)
       //
       println(1.0+2)
+
+      val input = Console.readLine()
+      println(input)
    }
 }
