@@ -28,10 +28,7 @@ object Main {
             stopWork()
          }
          else if ("exit".equals(cmd)) {
-            if (workInProcess) {
-               stopWork()
-            }
-            println("Exiting, total time worked: " + periodFormatter.print(new Duration(totalTime).toPeriod()))
+            exitWork()
             return
 //            break
          }
@@ -64,5 +61,12 @@ object Main {
          totalTime += timeWorked
          println("Work stopped, time worked: " + periodFormatter.print(new Duration(timeWorked).toPeriod()))
       }
+   }
+
+   def exitWork() = {
+      if (workInProcess) {
+         stopWork()
+      }
+      println("Exiting, total time worked: " + periodFormatter.print(new Duration(totalTime).toPeriod()))
    }
 }
