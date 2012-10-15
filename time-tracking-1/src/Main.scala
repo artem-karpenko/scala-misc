@@ -9,7 +9,7 @@ object Main {
    var totalTime: Long = 0
    var workInProcess = false
    var startTime: Long = -1
-   var stopTime: Long = -1;
+   var stopTime: Long = -1
 
    val periodFormatter: PeriodFormatter = new PeriodFormatterBuilder()
          .appendHours().appendSuffix(" h").appendSeparator(" ").appendMinutes().appendSuffix(" m")
@@ -20,20 +20,11 @@ object Main {
       while (true) {
          val cmd = readLine()
 
-         if ("start".equals(cmd)) {
-            startWork()
-//            continue;
-         }
-         else if ("stop".equals(cmd)) {
-            stopWork()
-         }
-         else if ("exit".equals(cmd)) {
-            exitWork()
-            return
-//            break
-         }
-         else {
-            println("Unknown command: " + cmd)
+         cmd.toLowerCase() match {
+            case "start" => startWork()
+            case "stop" => stopWork()
+            case "exit" => exitWork(); return
+            case _ => println("Unknown command: " + cmd)
          }
       }
    }
