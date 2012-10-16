@@ -37,4 +37,12 @@ class Task(val name: String) {
       }
       result
    }
+
+   override def toString = {
+      name
+   }
+}
+
+object EmptyTask extends Task("") {
+
 }
