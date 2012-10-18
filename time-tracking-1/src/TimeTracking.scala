@@ -12,7 +12,12 @@ object TimeTracking {
          .appendSeconds().appendSuffix("s")
          .toFormatter;
 
-   val taskManager = new TaskManager()
+   val session = new Session
+   val userManager = session.userManager
+
+   /**
+    * TODO: Refactor: make tasks independent of users, count time for tasks for each user separately
+    */
 
    def main(args: Array[String]): Unit = {
       while (true) {
@@ -21,24 +26,47 @@ object TimeTracking {
 
          try {
             cmd.toLowerCase().trim() match {
-               case "add task" => println("Task name"); taskManager.addTask(readLine())
-               case "start" => println("Task name"); taskManager.startTask(readLine())
-               case "stop" => println("Task name"); taskManager.stopTask(readLine())
-               case "current" => println("Current task: " + taskManager.currentTask.getOrElse(EmptyTask))
+               case "login" => println("Username and password"); session.login(readLine(), readLine())
+               case "logout" => session.logout; println("You are logged out")
+
+               case "add task" => println("Task name"); getTaskManager().addTask(readLine())
+               case "start" => println("Task name"); getTaskManager().startTask(readLine())
+               case "stop" => println("Task name"); getTaskManager().stopTask(readLine())
+               case "current" => println("Current task: " + getTaskManager().currentTask.getOrElse(EmptyTask))
                case "exit" => exitWork(); return
                case _ => println("Unknown command: " + cmd)
             }
          }
          catch {
             case e: TaskException => println("Error: " + e.getMessage)
+            case e: SecurityException => println("Error: " + e.getMessage)
          }
       }
    }
 
    def exitWork() = {
-      taskManager.stopAllTasksIfAny()
+      if (session.isLoggedIn()) {
+         session.logout()
+      }
 
-      println("Exiting, total time worked on all tasks: " +
-            periodFormatter.print(new Duration(taskManager.countTotalTime()).toPeriod()))
+      println("Exiting, total time worked on all tasks: ")
+      userManager.existingUsers.foreach((u: User) => {
+         println("User " + u.login + " worked:");
+         u.taskManager.tasks.foreach((t: Task) => {
+            println("Task: " + t.name + ", time spent: " +
+                  periodFormatter.print(new Duration(t.totalTime).toPeriod()))
+         })
+         println("Total time: " + periodFormatter.print(new Duration(u.taskManager.countTotalTime()).toPeriod()))
+      })
+
+      println("Total time working on all tasks by all users: " +
+            periodFormatter.print(new Duration(userManager.countTotalTime()).toPeriod()))
+   }
+
+   def getTaskManager() = {
+      if (!session.currentUser.isDefined) {
+         throw new NotLoggedInException
+      }
+      session.currentUser.get.taskManager
    }
 }
