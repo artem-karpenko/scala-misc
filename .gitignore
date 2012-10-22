@@ -1,5 +1,7 @@
 # Scala, Java
 *.class
+.idea/
+*iml
 
 #################
 ## Eclipse
