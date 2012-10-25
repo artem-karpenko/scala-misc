@@ -1,10 +1,11 @@
 import scala.collection.mutable
+import scala.None
 
 /**
  * Manager of tasks for user
  * @author Artem
  */
-class TaskManager {
+object TaskManager {
    val tasks: mutable.Set[Task] = new mutable.HashSet
    var currentTask: Option[Task] = Option(null)
 
@@ -18,10 +19,13 @@ class TaskManager {
          throw new TaskAlreadyExistsException(name)
       }
 
-      tasks.add(new Task(name))
+      val task: Task = new Task(name)
+      tasks.add(task)
+
+      task
    }
 
-   def startTask(name: String): Task = {
+   def startTask(name: String) = {
       if (!taskExists(name)) {
          throw new TaskNotFoundException(name)
       }
@@ -33,10 +37,10 @@ class TaskManager {
       task.startWork()
       currentTask = Option(task)
 
-      return task
+      task
    }
 
-   def stopTask(name: String): Task = {
+   def stopTask(name: String) = {
       if (!taskExists(name)) {
          throw new TaskNotFoundException(name)
       }
@@ -51,7 +55,7 @@ class TaskManager {
       task.stopWork()
       currentTask = Option(null)
 
-      return task
+      task
    }
 
    def stopAllTasksIfAny() {
@@ -64,6 +68,16 @@ class TaskManager {
    def countTotalTime() = {
       tasks.foldLeft(0L)((count, task) => count + task.totalTime)
    }
+
+   /*
+   def assignTaskToUser(task: Task, user: User) = {
+      user.assignTask(task)
+   }
+
+   def removeTaskFromUser(task: Task, user: User) = {
+      user.removeTask(task)
+   }
+   */
 
    /**
     * Check whether task with such name already exists

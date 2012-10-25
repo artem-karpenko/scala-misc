@@ -1,7 +1,7 @@
 /**
  * @author Artem
  */
-class UserManager {
+object UserManager {
    val existingUsers: Set[User] = Set[User](
       new User("user1", "1"),
       new User("user2", "2")

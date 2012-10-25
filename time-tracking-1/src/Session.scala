@@ -1,8 +1,7 @@
 /**
  * @author Artem
  */
-class Session {
-   val userManager = new UserManager
+object Session {
    var currentUser: Option[User] = None
 
    def login(login: String, password: String) = {
@@ -12,8 +11,8 @@ class Session {
 
       def isUserValid(u: User) = u.login == login && u.password == password
 
-      if (userManager.existingUsers.exists(isUserValid)) {
-         currentUser = userManager.existingUsers.find(isUserValid)
+      if (UserManager.existingUsers.exists(isUserValid)) {
+         currentUser = UserManager.existingUsers.find(isUserValid)
       }
       else {
          throw new InvalidCredentialsException

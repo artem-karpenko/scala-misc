@@ -12,9 +12,6 @@ object TimeTracking {
          .appendSeconds().appendSuffix("s")
          .toFormatter;
 
-   val session = new Session
-   val userManager = session.userManager
-
    /**
     * TODO: Refactor: make tasks independent of users, count time for tasks for each user separately
     */
@@ -26,8 +23,8 @@ object TimeTracking {
 
          try {
             cmd.toLowerCase().trim() match {
-               case "login" => println("Username and password"); session.login(readLine(), readLine())
-               case "logout" => session.logout; println("You are logged out")
+               case "login" => println("Username and password"); Session.login(readLine(), readLine())
+               case "logout" => Session.logout; println("You are logged out")
 
                case "add task" => println("Task name"); getTaskManager().addTask(readLine())
                case "start" => println("Task name"); getTaskManager().startTask(readLine())
@@ -45,12 +42,12 @@ object TimeTracking {
    }
 
    def exitWork() = {
-      if (session.isLoggedIn()) {
-         session.logout()
+      if (Session.isLoggedIn()) {
+         Session.logout()
       }
 
       println("Exiting, total time worked on all tasks: ")
-      userManager.existingUsers.foreach((u: User) => {
+      UserManager.existingUsers.foreach((u: User) => {
          println("User " + u.login + " worked:");
          u.taskManager.tasks.foreach((t: Task) => {
             println("Task: " + t.name + ", time spent: " +
@@ -60,13 +57,13 @@ object TimeTracking {
       })
 
       println("Total time working on all tasks by all users: " +
-            periodFormatter.print(new Duration(userManager.countTotalTime()).toPeriod()))
+            periodFormatter.print(new Duration(UserManager.countTotalTime()).toPeriod()))
    }
 
    def getTaskManager() = {
-      if (!session.currentUser.isDefined) {
+      if (!Session.currentUser.isDefined) {
          throw new NotLoggedInException
       }
-      session.currentUser.get.taskManager
+      TaskManager
    }
 }
