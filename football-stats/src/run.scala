@@ -21,4 +21,5 @@ val g1 = new Game(Map(t1 -> 3, t2 -> 2), new Date())
 val g2 = new Game(Map(t3 -> 1, t4 ->  2), new Date())
 GameManager.games ++= Set(g1, g2)
 
-GameManager.players.foreach((p: Player) => println(p + ": " + GameManager.getStatsPerPlayer(p)))
+GameManager.players.toList.sortWith((p1:Player, p2:Player) => p1.name.compareTo(p2.name) < 0)
+   .foreach((p: Player) => println(p + ": " + GameManager.getStatsPerPlayer(p)))
