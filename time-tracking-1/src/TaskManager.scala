@@ -8,6 +8,7 @@ import scala.None
 object TaskManager {
    val tasks: mutable.Set[Task] = new mutable.HashSet
    var currentTask: Option[Task] = Option(null)
+   var currentWorks: mutable.Set[Work] = new mutable.HashSet
 
    /**
     * Add task
